@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
 import com.example.activityandfragmentconnectiontest.databinding.ActivityMainBinding
 import com.google.android.material.snackbar.Snackbar
 
@@ -31,9 +32,23 @@ class MainActivity : AppCompatActivity() {
                 showSnackBar(this)
             }
         }
+
+        viewModel.updateNavController.observe(this) {t->
+            t.getContentIfNotHandled()?.apply {
+                setupActionBarWithNavController(this)
+            }
+        }
+
+        viewModel.updateNavController(navController!!)
+        binding!!.bottomNavigationView.setupWithNavController(navController!!)
+//        setupActionBarWithNavController(navController!!)
     }
 
     private fun showSnackBar(msg: String) {
         Snackbar.make(this, binding!!.root, msg, Snackbar.LENGTH_LONG).show()
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        return super.onSupportNavigateUp() || viewModel.updateNavController.value!!.peekContent().navigateUp()
     }
 }

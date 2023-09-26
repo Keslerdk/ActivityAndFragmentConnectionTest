@@ -7,6 +7,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.NavHostFragment
+import com.example.activityandfragmentconnectiontest.R
 import com.example.activityandfragmentconnectiontest.SharedViewModel
 import com.example.activityandfragmentconnectiontest.databinding.SecondFragmentBinding
 
@@ -29,18 +33,9 @@ class SecondFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.btn1.setOnClickListener {
-            secondViewModel.incrementCounter()
-        }
-
-        binding.btn2.setOnClickListener {
-            sharedViewModel.showSnackBar("Second fragment snack bar")
-        }
-
-
-        secondViewModel.counter.observe(viewLifecycleOwner) {
-            binding.tv2.text = it.toString()
-        }
+        val localNavController =
+            (childFragmentManager.findFragmentById(R.id.nested_nav_host) as NavHostFragment).navController
+        sharedViewModel.updateNavController(localNavController)
 
     }
 
